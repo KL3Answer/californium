@@ -262,7 +262,9 @@ public final class UdpMatcher extends BaseMatcher {
 
 		try {
 			if (endpointContextMatcher.isResponseRelatedToRequest(context, response.getSourceContext())) {
-				if (response.getType() == Type.ACK && requestMid != response.getMID()) {
+                if (response.getType() == Type.ACK && requestMid != response.getMID()
+                        // hide the defect of the protocol of oneNet :use ACK as Notify
+                        && (!(currentRequest.isObserve() && response.getOptions().hasObserve()))) {
 					// The token matches but not the MID.
 					LOGGER.warn("possible MID reuse before lifetime end for token {}, expected MID {} but received {}",
 							response.getTokenString(), requestMid, response.getMID());

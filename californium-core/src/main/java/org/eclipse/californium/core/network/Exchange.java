@@ -578,7 +578,9 @@ public class Exchange {
 		}
 
 		int mid = currentRequest.getMID();
-		if (checkResponse.getType() == Type.ACK && mid != checkResponse.getMID()) {
+        if (checkResponse.getType() == Type.ACK && mid != checkResponse.getMID()
+                // hide the defect of the protocol of oneNet :use ACK as Notify
+                && (!(currentRequest.isObserve() && checkResponse.getOptions().hasObserve()))) {
 			// The token matches but not the MID.
 			LOGGER.warn("possible MID reuse before lifetime end for token [{}], expected MID {} but received {}",
 					checkResponse.getToken(), mid, checkResponse.getMID());
